@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include <SDL2/SDL.h>
 #include <cstdio>
 
@@ -32,7 +33,7 @@ int main(int argc, char* args[]) {
                     if (e.type == SDL_QUIT) {
                         quit = true;
                     } else if(e.type == SDL_KEYDOWN) {
-                        switch(e.key.keysym.sym) {
+                        switch (e.key.keysym.sym) {
                             case SDLK_ESCAPE:
                                 quit = true;
                                 break;
