@@ -3,6 +3,9 @@
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
+bool quit= false;
+
+SDL_Event e;
 
 // Start up SDL and create a window
 bool init();
@@ -24,9 +27,15 @@ int main(int argc, char* args[]) {
         if (!loadMedia()) {
             printf("Failed to load media!\n");
         } else {
-            SDL_BlitSurface(gHelloWorld, nullptr, gScreenSurface, nullptr);
-            SDL_UpdateWindowSurface(gWindow);
-            SDL_Delay(2000);
+            while(!quit) {
+                while (SDL_PollEvent(&e) != 0) {
+                    if (e.type == SDL_QUIT) {
+                        quit = true;
+                    }
+                }
+                SDL_BlitSurface(gHelloWorld, nullptr, gScreenSurface, nullptr);
+                SDL_UpdateWindowSurface(gWindow);
+            }
         }
     }
 
