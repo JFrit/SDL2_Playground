@@ -31,6 +31,12 @@ int main(int argc, char* args[]) {
                 while (SDL_PollEvent(&e) != 0) {
                     if (e.type == SDL_QUIT) {
                         quit = true;
+                    } else if(e.type == SDL_KEYDOWN) {
+                        switch(e.key.keysym.sym) {
+                            case SDLK_ESCAPE:
+                                quit = true;
+                                break;
+                        }
                     }
                 }
                 SDL_BlitSurface(gHelloWorld, nullptr, gScreenSurface, nullptr);
