@@ -2,14 +2,13 @@
 #include <SDL2/SDL.h>
 #include <cstdio>
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+#include "sp/Window.h"
+
+const int SCREEN_WIDTH = 1280;
+const int SCREEN_HEIGHT = 960;
 bool quit = false;
 
 SDL_Event e;
-
-// Start up SDL and create a window
-bool init();
 
 void close();
 
@@ -21,10 +20,6 @@ bool initGL();
 
 void render();
 
-SDL_Window *gWindow = nullptr;
-
-SDL_GLContext gContext;
-
 //Graphics program
 GLuint gProgramID = 0;
 GLuint gVertexPos2DLocation = 0;
@@ -34,76 +29,25 @@ GLuint gVAO = 0;
 bool gRenderQuad = true;
 
 int main(int argc, char *args[]) {
-    if (!init()) {
-        printf("Failed to initialize!\n");
-    } else {
-        while (!quit) {
-            while (SDL_PollEvent(&e) != 0) {
-                if (e.type == SDL_QUIT) {
-                    quit = true;
-                } else if (e.type == SDL_KEYDOWN) {
-                    switch (e.key.keysym.sym) {
-                        case SDLK_ESCAPE:
-                            quit = true;
-                            break;
-                    }
+    std::shared_ptr<sp::Window> window = sp::Window::Open(640, 480, "TestGL");
+    initGL();
+    while (!quit) {
+        while (SDL_PollEvent(&e) != 0) {
+            if (e.type == SDL_QUIT) {
+                quit = true;
+            } else if (e.type == SDL_KEYDOWN) {
+                switch (e.key.keysym.sym) {
+                    case SDLK_ESCAPE:
+                        quit = true;
+                        break;
                 }
             }
-            render();
-            SDL_GL_SwapWindow(gWindow);
         }
+        render();
+        window->swapBuffer();
     }
     close();
     return 0;
-}
-
-bool init() {
-    //Initialization flag
-    bool success = true;
-
-    //Initialize SDL
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
-        success = false;
-    } else {
-        //Use OpenGL 3.3 core
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
-        //Create window
-        gWindow = SDL_CreateWindow("SDL GL Triangle", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                   SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
-        if (gWindow == nullptr) {
-            printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
-            success = false;
-        } else {
-            // Create OpenGL context
-            gContext = SDL_GL_CreateContext(gWindow);
-            if (gContext == nullptr) {
-                printf("OpenGL context could not be created! SDL Error0: %s\n", SDL_GetError());
-                success = false;
-            } else {
-                // Setup GLAD
-                if (!gladLoadGLLoader((GLADloadproc) SDL_GL_GetProcAddress)) {
-                    printf("Failed to initialize GLAD!");
-                    success = false;
-                }
-
-                // Use Vsync
-                if (SDL_GL_SetSwapInterval(1) < 0) {
-                    printf("Warning: Unable to set Vsync! SDL Error: %s\n", SDL_GetError());
-                }
-
-                // Initialize OpenGL
-                if (!initGL()) {
-                    printf("Unable to initialize OpenGL!\n");
-                    success = false;
-                }
-            }
-        }
-    }
-    return success;
 }
 
 bool initGL() {
@@ -278,16 +222,10 @@ void render() {
 
         glBindVertexArray(gVAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        glUseProgram(NULL);
     }
 }
 
 void close() {
     glDeleteProgram(gProgramID);
-
-    SDL_DestroyWindow(gWindow);
-    gWindow = nullptr;
-
     SDL_Quit();
 }
