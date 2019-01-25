@@ -29,7 +29,8 @@ GLuint gVAO = 0;
 bool gRenderQuad = true;
 
 int main(int argc, char *args[]) {
-    std::shared_ptr<sp::Window> window = sp::Window::Open(640, 480, "TestGL");
+
+    std::shared_ptr<sp::Window> window = sp::Window::Open(SCREEN_WIDTH, SCREEN_HEIGHT, "TestGL");
     initGL();
     while (!quit) {
         while (SDL_PollEvent(&e) != 0) {
