@@ -10,15 +10,15 @@ bool quit = false;
 
 SDL_Event e;
 
-void close();
+void Close();
 
-void printShaderLog(GLuint shader);
+void PrintShaderLog(GLuint shader);
 
-void printProgramLog(GLuint program);
+void PrintProgramLog(GLuint program);
 
-bool initGL();
+bool InitGL();
 
-void render();
+void Render();
 
 //Graphics program
 GLuint gProgramID = 0;
@@ -29,9 +29,8 @@ GLuint gVAO = 0;
 bool gRenderQuad = true;
 
 int main(int argc, char *args[]) {
-
     std::shared_ptr<sp::Window> window = sp::Window::Open(SCREEN_WIDTH, SCREEN_HEIGHT, "TestGL");
-    initGL();
+    InitGL();
     while (!quit) {
         while (SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) {
@@ -44,14 +43,14 @@ int main(int argc, char *args[]) {
                 }
             }
         }
-        render();
-        window->swapBuffer();
+        Render();
+        window->SwapBuffer();
     }
-    close();
+    Close();
     return 0;
 }
 
-bool initGL() {
+bool InitGL() {
     bool success = true;
 
     gProgramID = glCreateProgram();
@@ -75,7 +74,7 @@ bool initGL() {
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &vShaderCompiled);
     if (vShaderCompiled != GL_TRUE) {
         printf("Unable to compile vertex shader %d!\n", vertexShader);
-        printShaderLog(vertexShader);
+        PrintShaderLog(vertexShader);
         success = false;
     } else {
         //Attach vertex shader to program
@@ -102,7 +101,7 @@ bool initGL() {
         glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &fShaderCompiled);
         if (fShaderCompiled != GL_TRUE) {
             printf("Unable to compile fragment shader %d!\n", fragmentShader);
-            printShaderLog(fragmentShader);
+            PrintShaderLog(fragmentShader);
             success = false;
         } else {
             //Attach fragment shader to program
@@ -117,7 +116,7 @@ bool initGL() {
             glGetProgramiv(gProgramID, GL_LINK_STATUS, &programSuccess);
             if (programSuccess != GL_TRUE) {
                 printf("Error linking program %d!\n", gProgramID);
-                printProgramLog(gProgramID);
+                PrintProgramLog(gProgramID);
                 success = false;
             } else {
                 //Get vertex attribute location
@@ -158,7 +157,7 @@ bool initGL() {
     return success;
 }
 
-void printProgramLog(GLuint program) {
+void PrintProgramLog(GLuint program) {
     //Make sure name is shader
     if (glIsProgram(program)) {
         //Program log length
@@ -185,7 +184,7 @@ void printProgramLog(GLuint program) {
     }
 }
 
-void printShaderLog(GLuint shader) {
+void PrintShaderLog(GLuint shader) {
     //Make sure name is shader
     if (glIsShader(shader)) {
         //Shader log length
@@ -212,7 +211,7 @@ void printShaderLog(GLuint shader) {
     }
 }
 
-void render() {
+void Render() {
     //Clear color buffer
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -226,7 +225,7 @@ void render() {
     }
 }
 
-void close() {
+void Close() {
     glDeleteProgram(gProgramID);
     SDL_Quit();
 }

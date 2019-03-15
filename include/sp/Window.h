@@ -9,7 +9,6 @@
 #include <SDL2/SDL_video.h>
 
 namespace sp {
-
     // A window used for rendering. There's no reason to copy
     // an entire window so copying has been disabled.
     class Window {
@@ -19,7 +18,7 @@ namespace sp {
         Window() = default;
         Window(Window& other) = delete;
         Window& operator=(Window& other) = delete;
-        virtual void swapBuffer() = 0;
+        virtual void SwapBuffer() = 0;
 
         virtual ~Window() = default;
     };
@@ -31,14 +30,13 @@ namespace sp {
         OGLWindow();
         OGLWindow(OGLWindow& other) = delete;
         OGLWindow& operator=(OGLWindow& other) = delete;
-        void swapBuffer() override;
+        void SwapBuffer() override;
 
         ~OGLWindow() override;
 
     private:
         SDL_Window* win_handle;
-        SDL_GLContext glContext;
-        virtual void create(unsigned int w, unsigned h, const std::string& title);
+        virtual void Create(unsigned int w, unsigned h, const std::string& title);
     };
 }
 

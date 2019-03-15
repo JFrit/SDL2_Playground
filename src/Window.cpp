@@ -5,6 +5,7 @@ std::shared_ptr<sp::Window> sp::Window::Open(unsigned int w, unsigned int h, std
 #if defined(_OPENGL)
     return sp::OGLWindow::Open(w, h, std::move(title));
 #endif
+    // TODO: Add Vulkan support
 }
 
 std::shared_ptr<sp::OGLWindow> sp::OGLWindow::Open(unsigned int w, unsigned h, std::string title) {
@@ -14,16 +15,16 @@ std::shared_ptr<sp::OGLWindow> sp::OGLWindow::Open(unsigned int w, unsigned h, s
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-    window->create(w, h, title);
+    window->Create(w, h, title);
 
     return window;
 }
 
-void sp::OGLWindow::create(unsigned int w, unsigned h, const std::string& title) {
+void sp::OGLWindow::Create(unsigned int w, unsigned h, const std::string& title) {
     win_handle = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-
                                   w, h, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
-    glContext = SDL_GL_CreateContext(win_handle);
+
+    SDL_GL_CreateContext(win_handle);
     gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
     SDL_GL_SetSwapInterval(1);
 }
@@ -37,6 +38,6 @@ sp::OGLWindow::~OGLWindow() {
     }
 }
 
-void sp::OGLWindow::swapBuffer() {
+void sp::OGLWindow::SwapBuffer() {
     SDL_GL_SwapWindow(win_handle);
 }
