@@ -15,7 +15,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_compile_definitions("_OPENGL")
 
-set(SOURCE_FILES src/main.cpp src/glad.c include/sp/Window.h src/Window.cpp include/sp/Shader.h)
+set(SOURCE_FILES src/main.cpp src/glad.c include/sp/Window.h src/Window.cpp include/sp/ShaderProgram.h src/ShaderProgram.cpp)
 add_executable(SDL2_Playground ${SOURCE_FILES})
 
 target_link_libraries(SDL2_Playground SDL2main SDL2)
